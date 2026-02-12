@@ -39,4 +39,3 @@ This project is designed for one-click deployment to Vercel.
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Database**: MongoDB (Official Driver)
-'''
