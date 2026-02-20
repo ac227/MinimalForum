@@ -173,7 +173,7 @@ export default function PostDetail({ params }: { params: Promise<{ id: string }>
           {post.comments && post.comments.length > 0 ? (
             post.comments.map((comment: Comment) => (
               <Card key={comment._id.toString()} className="bg-zinc-50">
-                <CardContent className="p-4">
+                <CardContent className="px-5 pb-4 pt-5">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-sm font-semibold text-zinc-800">@{comment.authorName || 'Anonymous'}</span>
                     <span className="text-xs text-zinc-500">{new Date(comment.createdAt).toLocaleString()}</span>
