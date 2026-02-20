@@ -1,25 +1,12 @@
 @import "tailwindcss";
 
-@theme {
-  --color-trans-blue: #5BCFFA;
-  --color-trans-pink: #F5A9B8;
-  --color-trans-white: #FFFFFF;
-}
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffffff;
-    --foreground: #171717;
-  }
+  --background: #f4f4f5;
+  --foreground: #18181b;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
