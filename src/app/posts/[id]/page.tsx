@@ -1,8 +1,13 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
-import { Post, Comment } from '@/types/post';
+import { useState, useEffect, use, useCallback } from 'react';
 import Link from 'next/link';
+import { Post, Comment } from '@/types/post';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 export default function PostDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -13,7 +18,7 @@ export default function PostDetail({ params }: { params: Promise<{ id: string }>
   const [commentAuthorEmail, setCommentAuthorEmail] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       const res = await fetch(`/api/posts/${id}`);
       if (res.ok) {
@@ -25,11 +30,11 @@ export default function PostDetail({ params }: { params: Promise<{ id: string }>
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
     fetchPost();
-  }, [id]);
+  }, [fetchPost]);
 
   const handleLike = async () => {
     if (!post) return;
@@ -52,10 +57,10 @@ export default function PostDetail({ params }: { params: Promise<{ id: string }>
       const res = await fetch(`/api/posts/${id}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           content: commentContent,
           authorName: commentAuthorName,
-          authorEmail: commentAuthorEmail || undefined
+          authorEmail: commentAuthorEmail || undefined,
         }),
       });
 
@@ -66,7 +71,6 @@ export default function PostDetail({ params }: { params: Promise<{ id: string }>
           comments: [...(post.comments || []), data.comment],
         });
         setCommentContent('');
-        // Keep author name for convenience
       }
     } catch (error) {
       console.error('Failed to comment:', error);
@@ -77,124 +81,111 @@ export default function PostDetail({ params }: { params: Promise<{ id: string }>
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-trans-pink font-bold animate-pulse">Loading...</p>
+      <div className="flex min-h-screen items-center justify-center bg-zinc-100">
+        <p className="animate-pulse font-medium text-zinc-600">Loading...</p>
       </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
-        <p className="text-gray-500 mb-4">Post not found</p>
-        <Link href="/" className="text-trans-blue font-bold hover:underline">
-          Back to Home
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-zinc-100">
+        <p className="text-zinc-600">Post not found</p>
+        <Link href="/" className="text-zinc-900 underline underline-offset-4">
+          Back to home
         </Link>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 pb-12">
-      <header className="bg-gradient-to-r from-trans-blue via-trans-pink to-trans-white py-6 shadow-md mb-8">
-        <div className="max-w-2xl mx-auto px-4 flex items-center">
-          <Link href="/" className="text-gray-700 hover:text-gray-900 mr-4">
+    <main className="min-h-screen bg-zinc-100 pb-12">
+      <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/90 backdrop-blur">
+        <div className="mx-auto flex h-16 w-full max-w-3xl items-center px-4">
+          <Link href="/" className="inline-flex items-center gap-1 text-sm text-zinc-700 hover:text-zinc-950">
             ← Back
           </Link>
-          <h1 className="text-2xl font-bold text-gray-800 flex-1 text-center">
-            Post Details
-          </h1>
+          <h1 className="flex-1 text-center text-base font-semibold text-zinc-900">Post details</h1>
+          <div className="w-12" />
         </div>
       </header>
 
-      <div className="max-w-2xl mx-auto px-4">
-        {/* Post Content */}
-        <div className="bg-white rounded-2xl shadow-md p-8 mb-8 border border-trans-blue/20">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold text-gray-800">{post.title}</h2>
-            <span className="text-sm font-medium px-3 py-1 bg-blue-50 rounded-full text-trans-blue border border-trans-blue/10">
-              @{post.authorName || 'Anonymous'}
-            </span>
-          </div>
-          <p className="text-gray-600 text-lg whitespace-pre-wrap mb-6">
-            {post.content}
-          </p>
-          <div className="flex items-center justify-between text-sm text-gray-400">
-            <span>{new Date(post.createdAt).toLocaleString()}</span>
-            <button
-              onClick={handleLike}
-              className="flex items-center space-x-2 text-trans-pink hover:scale-110 transition-transform"
-            >
-              <span className="text-xl">♥</span>
-              <span className="font-bold">{post.likes || 0}</span>
-            </button>
-          </div>
-        </div>
+      <div className="mx-auto mt-8 w-full max-w-3xl space-y-6 px-4">
+        <Card>
+          <CardHeader>
+            <div className="flex items-start justify-between gap-4">
+              <CardTitle className="text-2xl">{post.title}</CardTitle>
+              <Badge variant="secondary">@{post.authorName || 'Anonymous'}</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-6 whitespace-pre-wrap text-zinc-700">{post.content}</p>
+            <div className="flex items-center justify-between text-sm text-zinc-500">
+              <span>{new Date(post.createdAt).toLocaleString()}</span>
+              <button
+                onClick={handleLike}
+                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-zinc-700 transition hover:bg-zinc-100"
+              >
+                <span aria-hidden="true">♡</span>
+                <span>{post.likes || 0}</span>
+              </button>
+            </div>
+          </CardContent>
+        </Card>
 
-        {/* Comment Form */}
-        <div className="bg-white rounded-2xl shadow-sm p-6 mb-8 border border-trans-pink/20">
-          <h3 className="text-lg font-semibold mb-4 text-gray-700">Add a Comment</h3>
-          <form onSubmit={handleCommentSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="Nickname (Required)"
-                value={commentAuthorName}
-                onChange={(e) => setCommentAuthorName(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-trans-pink"
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Add a comment</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleCommentSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <Input
+                  type="text"
+                  placeholder="Nickname (required)"
+                  value={commentAuthorName}
+                  onChange={(e) => setCommentAuthorName(e.target.value)}
+                  required
+                />
+                <Input
+                  type="email"
+                  placeholder="Email (optional, private)"
+                  value={commentAuthorEmail}
+                  onChange={(e) => setCommentAuthorEmail(e.target.value)}
+                />
+              </div>
+              <Textarea
+                placeholder="Write a comment..."
+                value={commentContent}
+                onChange={(e) => setCommentContent(e.target.value)}
+                className="min-h-24"
                 required
               />
-              <input
-                type="email"
-                placeholder="Email (Optional, Private)"
-                value={commentAuthorEmail}
-                onChange={(e) => setCommentAuthorEmail(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-trans-pink"
-              />
-            </div>
-            <textarea
-              placeholder="Write a comment..."
-              value={commentContent}
-              onChange={(e) => setCommentContent(e.target.value)}
-              className="w-full p-3 border border-gray-200 rounded-xl h-24 focus:outline-none focus:ring-2 focus:ring-trans-pink"
-              required
-            />
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full bg-trans-pink text-white font-bold py-2 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50"
-            >
-              {submitting ? 'Posting...' : 'Comment'}
-            </button>
-          </form>
-        </div>
+              <Button type="submit" disabled={submitting} className="w-full">
+                {submitting ? 'Posting...' : 'Comment'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
 
-        {/* Comments List */}
-        <div className="space-y-4">
-          <h3 className="text-xl font-bold text-gray-700 px-2">
-            Comments ({post.comments?.length || 0})
-          </h3>
+        <section className="space-y-3">
+          <h3 className="px-1 text-lg font-semibold text-zinc-800">Comments ({post.comments?.length || 0})</h3>
           {post.comments && post.comments.length > 0 ? (
-            post.comments.map((comment: any, index: number) => (
-              <div
-                key={comment._id}
-                className="p-4 bg-white rounded-xl shadow-sm border border-gray-100"
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-bold text-gray-700">
-                    @{comment.authorName || 'Anonymous'}
-                  </span>
-                  <span className="text-[10px] text-gray-400">
-                    {new Date(comment.createdAt).toLocaleString()}
-                  </span>
-                </div>
-                <p className="text-gray-600">{comment.content}</p>
-              </div>
+            post.comments.map((comment: Comment) => (
+              <Card key={comment._id.toString()} className="bg-zinc-50">
+                <CardContent className="p-4">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="text-sm font-semibold text-zinc-800">@{comment.authorName || 'Anonymous'}</span>
+                    <span className="text-xs text-zinc-500">{new Date(comment.createdAt).toLocaleString()}</span>
+                  </div>
+                  <p className="text-sm text-zinc-700">{comment.content}</p>
+                </CardContent>
+              </Card>
             ))
           ) : (
-            <p className="text-center text-gray-400 py-8">No comments yet.</p>
+            <p className="py-8 text-center text-sm text-zinc-500">No comments yet.</p>
           )}
-        </div>
+        </section>
       </div>
     </main>
   );
