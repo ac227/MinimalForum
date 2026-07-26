@@ -61,15 +61,16 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, id: result.insertedId });
-  } catch (error: any) {
+  } catch (error) {
+    const err = error as { message?: string; stack?: string; code?: unknown };
     console.error('Detailed Database Error:', {
-      message: error.message,
-      stack: error.stack,
-      code: error.code
+      message: err.message,
+      stack: err.stack,
+      code: err.code
     });
-    return NextResponse.json({ 
-      error: 'Internal Server Error', 
-      details: error.message 
+    return NextResponse.json({
+      error: 'Internal Server Error',
+      details: err.message
     }, { status: 500 });
   }
 }

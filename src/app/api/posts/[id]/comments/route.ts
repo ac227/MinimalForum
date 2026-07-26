@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
+import { ObjectId, type UpdateFilter, type Document } from 'mongodb';
 
 export async function POST(
   request: NextRequest,
@@ -28,7 +28,7 @@ export async function POST(
 
     await collection.updateOne(
       { _id: new ObjectId(id) },
-      { $push: { comments: newComment } as any }
+      { $push: { comments: newComment } } as unknown as UpdateFilter<Document>
     );
 
     return NextResponse.json({ success: true, comment: newComment });

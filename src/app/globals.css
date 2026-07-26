@@ -1,12 +1,138 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant pastel (&:where([data-theme="pastel"], [data-theme="pastel"] *));
+
+/* Mono theme (default) — light */
 :root {
+  color-scheme: light;
   --background: #f4f4f5;
   --foreground: #18181b;
+  --card: #ffffff;
+  --card-foreground: #09090b;
+  --muted-foreground: #71717a;
+  --border: #e4e4e7;
+  --input: #d4d4d8;
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #3f3f46;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --ring: #71717a;
+  --like: #52525b;
+  --tint-a: #ffffff;
+  --tint-b: #ffffff;
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --header-foreground: #18181b;
+  --card-radius: 0.75rem;
+  --control-radius: 0.375rem;
+}
+
+/* Mono theme — dark */
+.dark {
+  color-scheme: dark;
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #18181b;
+  --card-foreground: #fafafa;
+  --muted-foreground: #a1a1aa;
+  --border: #27272a;
+  --input: #3f3f46;
+  --primary: #fafafa;
+  --primary-foreground: #18181b;
+  --secondary: #27272a;
+  --secondary-foreground: #d4d4d8;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
+  --ring: #71717a;
+  --like: #d4d4d8;
+  --tint-a: #18181b;
+  --tint-b: #18181b;
+  --header-bg: rgba(9, 9, 11, 0.85);
+  --header-foreground: #fafafa;
+}
+
+/* Pastel theme (original v0.0.1 look) — light */
+[data-theme="pastel"] {
+  color-scheme: light;
+  --background: #f9fafb;
+  --foreground: #1f2937;
+  --card: #ffffff;
+  --card-foreground: #1f2937;
+  --muted-foreground: #6b7280;
+  --border: #fbdce2;
+  --input: #d1d5db;
+  --primary: #5bcffa;
+  --primary-foreground: #0b2836;
+  --secondary: #eff6ff;
+  --secondary-foreground: #147ab0;
+  --accent: #eff6ff;
+  --accent-foreground: #147ab0;
+  --ring: #147ab0;
+  --like: #f5a9b8;
+  --tint-a: #eff6ff;
+  --tint-b: #fdf2f8;
+  --header-bg: linear-gradient(to right, #5bcffa, #f5a9b8, #ffffff);
+  --header-foreground: #1f2937;
+  --card-radius: 1rem;
+  --control-radius: 0.75rem;
+}
+
+/* Pastel theme — dark */
+[data-theme="pastel"].dark {
+  color-scheme: dark;
+  --background: #101017;
+  --foreground: #e5e7eb;
+  --card: #191922;
+  --card-foreground: #e5e7eb;
+  --muted-foreground: #8b8b99;
+  --border: #3c2a33;
+  --input: #454553;
+  --primary: #5bcffa;
+  --primary-foreground: #0b2836;
+  --secondary: #142430;
+  --secondary-foreground: #7fd4f7;
+  --accent: #142430;
+  --accent-foreground: #7fd4f7;
+  --ring: #5bcffa;
+  --like: #f5a9b8;
+  --tint-a: #151d27;
+  --tint-b: #201720;
+  --header-bg: linear-gradient(to right, #1d4a61, #5e3a45, #23232b);
+  --header-foreground: #f3f4f6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
+  --color-like: var(--like);
+  --color-tint-a: var(--tint-a);
+  --color-tint-b: var(--tint-b);
+  --radius-card: var(--card-radius);
+  --radius-control: var(--control-radius);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Inter, "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.site-header {
+  background: var(--header-bg);
+  color: var(--header-foreground);
+  border-bottom: 1px solid var(--border);
 }

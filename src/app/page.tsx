@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ThemeControls } from '@/components/theme-controls';
+import { cn } from '@/lib/utils';
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -90,11 +92,14 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-zinc-100 pb-12">
-      <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-3xl items-center justify-between px-4">
-          <h1 className="text-xl font-semibold tracking-tight text-zinc-900">Minimal Forum</h1>
-          <Badge variant="outline">Anonymous</Badge>
+    <main className="min-h-screen bg-background pb-12">
+      <header className="site-header sticky top-0 z-10 backdrop-blur">
+        <div className="mx-auto flex h-16 w-full max-w-3xl items-center justify-between gap-3 px-4">
+          <h1 className="text-xl font-semibold tracking-tight">Minimal Forum</h1>
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="max-sm:hidden">Anonymous</Badge>
+            <ThemeControls />
+          </div>
         </div>
       </header>
 
@@ -137,26 +142,33 @@ export default function Home() {
         </Card>
 
         <div className="space-y-4">
-          {posts.map((post) => (
+          {posts.map((post, index) => (
             <Link
               key={post._id.toString()}
               href={`/posts/${post._id.toString()}`}
-              className="block rounded-xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow"
+              className={cn(
+                'group block rounded-card border border-border p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow',
+                index % 2 === 0 ? 'bg-tint-a' : 'bg-tint-b'
+              )}
             >
               <div className="mb-2 flex items-start justify-between gap-3">
-                <h3 className="text-lg font-semibold text-zinc-900">{post.title}</h3>
+                <h3 className="text-lg font-semibold text-foreground transition-colors pastel:group-hover:text-primary">
+                  {post.title}
+                </h3>
                 <Badge variant="secondary">@{post.authorName || 'Anonymous'}</Badge>
               </div>
-              <p className="mb-4 line-clamp-3 whitespace-pre-wrap text-sm text-zinc-700">{post.content}</p>
-              <div className="flex items-center justify-between text-xs text-zinc-500">
+              <p className="mb-4 line-clamp-3 whitespace-pre-wrap text-sm text-foreground/80">{post.content}</p>
+              <div className="flex items-center justify-between text-xs text-muted-foreground">
                 <span>{new Date(post.createdAt).toLocaleString()}</span>
                 <div className="flex items-center gap-4">
                   <button
                     onClick={(e) => handleLike(e, post._id.toString())}
-                    className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-zinc-700 transition hover:bg-zinc-100"
+                    aria-label={`Like this post (${post.likes || 0} likes)`}
+                    className="inline-flex items-center gap-1 rounded-control px-2 py-1 transition hover:bg-accent pastel:hover:scale-110 pastel:hover:bg-transparent"
                   >
-                    <span aria-hidden="true">♡</span>
-                    <span>{post.likes || 0}</span>
+                    <span aria-hidden="true" className="text-like pastel:hidden">♡</span>
+                    <span aria-hidden="true" className="hidden text-like pastel:inline">♥</span>
+                    <span className="text-muted-foreground">{post.likes || 0}</span>
                   </button>
                   <div className="inline-flex items-center gap-1">
                     <span aria-hidden="true">💬</span>
@@ -176,7 +188,9 @@ export default function Home() {
           </div>
         )}
 
-        {!loading && posts.length === 0 && <p className="py-10 text-center text-zinc-500">No posts yet. Be the first.</p>}
+        {!loading && posts.length === 0 && (
+          <p className="py-10 text-center text-muted-foreground">No posts yet. Be the first.</p>
+        )}
       </div>
     </main>
   );

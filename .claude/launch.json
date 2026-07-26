@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "minimal-forum-dev",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "MONGODB_URI=${MONGODB_URI:-mongodb://localhost:27017/minimalforum} exec pnpm dev"],
+      "port": 3000
+    }
+  ]
+}

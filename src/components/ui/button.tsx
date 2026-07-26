@@ -11,16 +11,16 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
-  default: 'bg-zinc-900 text-zinc-50 hover:bg-zinc-800',
-  secondary: 'bg-zinc-100 text-zinc-900 hover:bg-zinc-200',
-  outline: 'border border-zinc-300 bg-white hover:bg-zinc-100',
-  ghost: 'hover:bg-zinc-100',
+  default: 'bg-primary text-primary-foreground hover:bg-primary/90',
+  secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
+  outline: 'border border-input bg-card hover:bg-accent hover:text-accent-foreground',
+  ghost: 'hover:bg-accent hover:text-accent-foreground',
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
   default: 'h-10 px-4 py-2',
-  sm: 'h-9 rounded-md px-3',
-  lg: 'h-11 rounded-md px-8',
+  sm: 'h-9 px-3',
+  lg: 'h-11 px-8',
 };
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -28,7 +28,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         className={cn(
-          'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[color,box-shadow,background-color,border-color] disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 focus-visible:ring-offset-2 ring-offset-white',
+          'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-control text-sm font-medium transition-[color,box-shadow,background-color,border-color] disabled:pointer-events-none disabled:opacity-50 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background',
           variantClasses[variant],
           sizeClasses[size],
           className

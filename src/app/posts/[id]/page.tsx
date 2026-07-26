@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { ThemeControls } from '@/components/theme-controls';
 
 export default function PostDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -81,17 +82,17 @@ export default function PostDetail({ params }: { params: Promise<{ id: string }>
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-100">
-        <p className="animate-pulse font-medium text-zinc-600">Loading...</p>
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="animate-pulse font-medium text-muted-foreground pastel:text-like">Loading...</p>
       </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-zinc-100">
-        <p className="text-zinc-600">Post not found</p>
-        <Link href="/" className="text-zinc-900 underline underline-offset-4">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background">
+        <p className="text-muted-foreground">Post not found</p>
+        <Link href="/" className="text-foreground underline underline-offset-4 pastel:text-primary">
           Back to home
         </Link>
       </div>
@@ -99,14 +100,21 @@ export default function PostDetail({ params }: { params: Promise<{ id: string }>
   }
 
   return (
-    <main className="min-h-screen bg-zinc-100 pb-12">
-      <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex h-16 w-full max-w-3xl items-center px-4">
-          <Link href="/" className="inline-flex items-center gap-1 text-sm text-zinc-700 hover:text-zinc-950">
-            ← Back
-          </Link>
-          <h1 className="flex-1 text-center text-base font-semibold text-zinc-900">Post details</h1>
-          <div className="w-12" />
+    <main className="min-h-screen bg-background pb-12">
+      <header className="site-header sticky top-0 z-10 backdrop-blur">
+        <div className="mx-auto flex h-16 w-full max-w-3xl items-center gap-3 px-4">
+          <div className="flex-1">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1 text-sm opacity-80 transition-opacity hover:opacity-100"
+            >
+              ← Back
+            </Link>
+          </div>
+          <h1 className="text-base font-semibold">Post details</h1>
+          <div className="flex flex-1 items-center justify-end">
+            <ThemeControls />
+          </div>
         </div>
       </header>
 
@@ -119,15 +127,17 @@ export default function PostDetail({ params }: { params: Promise<{ id: string }>
             </div>
           </CardHeader>
           <CardContent>
-            <p className="mb-6 whitespace-pre-wrap text-zinc-700">{post.content}</p>
-            <div className="flex items-center justify-between text-sm text-zinc-500">
+            <p className="mb-6 whitespace-pre-wrap text-foreground/80">{post.content}</p>
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>{new Date(post.createdAt).toLocaleString()}</span>
               <button
                 onClick={handleLike}
-                className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-zinc-700 transition hover:bg-zinc-100"
+                aria-label={`Like this post (${post.likes || 0} likes)`}
+                className="inline-flex items-center gap-1 rounded-control px-2 py-1 transition hover:bg-accent pastel:hover:scale-110 pastel:hover:bg-transparent"
               >
-                <span aria-hidden="true">♡</span>
-                <span>{post.likes || 0}</span>
+                <span aria-hidden="true" className="text-like pastel:hidden">♡</span>
+                <span aria-hidden="true" className="hidden text-like pastel:inline">♥</span>
+                <span className="text-muted-foreground">{post.likes || 0}</span>
               </button>
             </div>
           </CardContent>
@@ -169,21 +179,21 @@ export default function PostDetail({ params }: { params: Promise<{ id: string }>
         </Card>
 
         <section className="space-y-3">
-          <h3 className="px-1 text-lg font-semibold text-zinc-800">Comments ({post.comments?.length || 0})</h3>
+          <h3 className="px-1 text-lg font-semibold text-foreground">Comments ({post.comments?.length || 0})</h3>
           {post.comments && post.comments.length > 0 ? (
             post.comments.map((comment: Comment) => (
-              <Card key={comment._id.toString()} className="bg-zinc-50">
+              <Card key={comment._id.toString()}>
                 <CardContent className="px-5 pb-4 pt-5">
                   <div className="mb-2 flex items-center justify-between">
-                    <span className="text-sm font-semibold text-zinc-800">@{comment.authorName || 'Anonymous'}</span>
-                    <span className="text-xs text-zinc-500">{new Date(comment.createdAt).toLocaleString()}</span>
+                    <span className="text-sm font-semibold text-foreground">@{comment.authorName || 'Anonymous'}</span>
+                    <span className="text-xs text-muted-foreground">{new Date(comment.createdAt).toLocaleString()}</span>
                   </div>
-                  <p className="text-sm text-zinc-700">{comment.content}</p>
+                  <p className="text-sm text-foreground/80">{comment.content}</p>
                 </CardContent>
               </Card>
             ))
           ) : (
-            <p className="py-8 text-center text-sm text-zinc-500">No comments yet.</p>
+            <p className="py-8 text-center text-sm text-muted-foreground">No comments yet.</p>
           )}
         </section>
       </div>

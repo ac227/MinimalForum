@@ -5,9 +5,9 @@ import { cn } from '@/lib/utils';
 type BadgeVariant = 'default' | 'secondary' | 'outline';
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default: 'border-transparent bg-zinc-900 text-zinc-50',
-  secondary: 'border-zinc-300 bg-zinc-100 text-zinc-700',
-  outline: 'border-zinc-300 text-zinc-700',
+  default: 'border-transparent bg-primary text-primary-foreground',
+  secondary: 'border-transparent bg-secondary text-secondary-foreground',
+  outline: 'border-border text-inherit',
 };
 
 function Badge({
